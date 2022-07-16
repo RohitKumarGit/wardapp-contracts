@@ -5,9 +5,7 @@ import fs from "fs";
 const func: DeployFunction = async function (hre: any) {
   const { deployments, getNamedAccounts, network } = hre;
   const { deploy } = deployments;
-
-  const { deployer } = await getNamedAccounts();
-  console.log(deployer);
+  let { deployer } = await getNamedAccounts();
   const ctr = await deploy(constants.COLLECTION_NAME, {
     contract: constants.COLLECTION_NAME,
     from: deployer,

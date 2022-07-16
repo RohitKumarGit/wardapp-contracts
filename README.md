@@ -11,3 +11,6 @@ GAS_REPORT=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+Polygon mumbai contract address
+0x6AF8D257fcCe44DBb3cc44918Edb4aEEC7DA44F2

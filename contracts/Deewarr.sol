@@ -6,13 +6,16 @@ import "hardhat/console.sol";
 
 contract Deewarr is ERC1155 {
     address owner;
+    event Transfer(address  from, address  to,uint256  token, uint amount);
    constructor() public ERC1155("https://woxpdvfthtmznhwvymeo.supabase.co/storage/v1/object/public/nfts/{id}.json") {
     owner = msg.sender;
    }
    function mint( address to, uint256 id,uint256 amount) public{
      _mint(to, id, amount, "");
+     emit Transfer(owner, to, id,amount);
    }
    function transfer( address from,address to,uint256 id,uint256 amount) public{
+        emit Transfer(from, to, id,amount);
         safeTransferFrom(from, to, id, amount, "");
    }
        
