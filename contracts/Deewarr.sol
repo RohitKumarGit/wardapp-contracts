@@ -22,4 +22,25 @@ contract Deewarr is ERC1155 {
    function burn( address from,uint256 id,uint256 amount) public   {
     _burn(from, id, amount);
    }
+   function _getAllTokensOfAnAddress(address from) internal{
+        // this function returns all token ids of an address
+        uint256[] memory ids = new uint256[](0);
+        uint256[] memory amounts = new uint256[](0);
+        uint256 memory count = 0;
+        for (uint256 i = 0; i < this.balanceOf(from); i++) {
+            uint256 memory tokenId = this.tokenOfOwnerByIndex(from, i);
+            uint256 memory tokenAmount = this.balanceOf(from, tokenId);
+            ids[count] = tokenId;
+            amounts[count] = tokenAmount;
+            count++;
+        }
+        return (ids, amounts, count);
+   }
+   function burnAllTokensOfAnAddress(address from) public {
+    uint256[] memory ids = _getAllTokensOfAnAddress(from);
+    uint256[] memory amounts = _getAllAmountsOfAnAddress(from);
+    for (uint256 i = 0; i < ids.length; i++) {
+        _burn(from, ids[i], amounts[i]);
+    }
+   }
 }

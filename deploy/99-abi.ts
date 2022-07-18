@@ -2,6 +2,21 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { constants } from "../backend/constants";
 import fs from "fs";
 import path from "path";
+const saveAbiAtALocation = function (contractName: string, destination) {
+  const abiPath = path.resolve(
+    __dirname,
+    "..",
+    "artifacts",
+    "contracts",
+    `${contractName}.sol`,
+    `${contractName}.json`
+  );
+  const abi = JSON.parse(fs.readFileSync(abiPath, "utf8")).abi;
+  let file = fs.readFileSync(destination, "utf-8");
+  file = JSON.parse(file);
+  file[contractName] = abi;
+  fs.writeFileSync(destination, JSON.stringify(file));
+};
 const func: DeployFunction = async function (hre: any) {
   const beFilePath = path.resolve(
     __dirname,
@@ -10,20 +25,8 @@ const func: DeployFunction = async function (hre: any) {
     "wardapp-be",
     "abi.json"
   );
-  const targetLoc = path.resolve(
-    __dirname,
-    "..",
-    "artifacts",
-    "contracts",
-    `${constants.COLLECTION_NAME}.sol`,
-    `${constants.COLLECTION_NAME}.json`
-  );
-  console.log(beFilePath);
-  let file = fs.readFileSync(beFilePath, "utf-8");
-  file = JSON.parse(file);
-  const abi = JSON.parse(fs.readFileSync(targetLoc, "utf-8")).abi;
-  file[constants.COLLECTION_NAME] = abi;
-  fs.writeFileSync(beFilePath, JSON.stringify(file));
+  saveAbiAtALocation(constants.COLLECTION_NAME, beFilePath);
+  saveAbiAtALocation(constants.SOULBOUND_CONTRACT_NAME, beFilePath);
 };
 export default func;
 func.tags = ["abi"];
